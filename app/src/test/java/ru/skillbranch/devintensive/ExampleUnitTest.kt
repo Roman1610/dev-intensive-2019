@@ -5,6 +5,7 @@ import org.junit.Test
 import org.junit.Assert.*
 import ru.skillbranch.devintensive.extensions.*
 import ru.skillbranch.devintensive.models.BaseMessage
+import ru.skillbranch.devintensive.models.Bender
 import ru.skillbranch.devintensive.models.Chat
 import ru.skillbranch.devintensive.models.User
 import ru.skillbranch.devintensive.utils.Utils
@@ -136,5 +137,41 @@ class ExampleUnitTest {
         println("<p class=\"title\">Образовательное IT-сообщество Skill Branch</p>".stripHtml())
         // Образовательное IT-сообщество Skill Branch
         println("<p>Образовательное       IT-сообщество Skill Branch</p>".stripHtml())
+    }
+
+    @Test
+    fun testValidationOfAnswer() {
+        var bender = Bender(question = Bender.Question.NAME)
+        assert(bender.validateAnswer("bender") != null)
+        assert(bender.validateAnswer("benderq212") != null)
+        assert(bender.validateAnswer("Bender12312") == null)
+        assert(bender.validateAnswer("Bender") == null)
+
+        bender = Bender(question = Bender.Question.PROFESSION)
+        assert(bender.validateAnswer("Bender") != null)
+        assert(bender.validateAnswer("benderq212") == null)
+        assert(bender.validateAnswer("Bender12312") != null)
+        assert(bender.validateAnswer("bender") == null)
+
+        bender = Bender(question = Bender.Question.MATERIAL)
+        assert(bender.validateAnswer("Metal123") != null)
+        assert(bender.validateAnswer("metalq212") != null)
+        assert(bender.validateAnswer("metal12312") != null)
+        assert(bender.validateAnswer("metal") == null)
+        assert(bender.validateAnswer("Metal") == null)
+
+        bender = Bender(question = Bender.Question.BDAY)
+        assert(bender.validateAnswer("Bender") != null)
+        assert(bender.validateAnswer("benderq212") != null)
+        assert(bender.validateAnswer("Bender12312") != null)
+        assert(bender.validateAnswer("2993") == null)
+        assert(bender.validateAnswer("3214213") == null)
+
+        bender = Bender(question = Bender.Question.SERIAL)
+        assert(bender.validateAnswer("Benderw") != null)
+        assert(bender.validateAnswer("bender2") != null)
+        assert(bender.validateAnswer("12312") != null)
+        assert(bender.validateAnswer("1234567") == null)
+        assert(bender.validateAnswer("2716057") == null)
     }
 }
