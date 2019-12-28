@@ -13,8 +13,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.skillbranch.devintensive.extensions.hideKeyboard
-import ru.skillbranch.devintensive.extensions.isKeyboardClosed
-import ru.skillbranch.devintensive.extensions.isKeyboardOpen
 import ru.skillbranch.devintensive.models.Bender
 
 
@@ -103,9 +101,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TextView.OnEdito
             val (r, g, b) = color
             benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
             textTxt.text = phrase
-
-            Log.d("TAG", "${isKeyboardOpen()}")
-            Log.d("TAG", "${isKeyboardClosed()}")
         }
     }
 
