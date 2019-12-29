@@ -14,14 +14,6 @@ fun Activity.hideKeyboard() {
     }
 }
 
-fun Activity.showKeyboard() {
-    var imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-    if (imm != null) {
-        imm.showSoftInput(currentFocus, InputMethodManager.SHOW_IMPLICIT)
-        imm = null
-    }
-}
-
 fun Activity.isKeyboardOpen(): Boolean {
     val r = Rect()
     window.decorView.rootView.getWindowVisibleDisplayFrame(r)
