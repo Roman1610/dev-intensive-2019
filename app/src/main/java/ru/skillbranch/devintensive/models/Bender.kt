@@ -4,11 +4,6 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
 
     var amountOfWrongAnswers = 0
 
-    constructor(status: Status = Status.NORMAL, question: Question = Question.NAME, wrongAnswers: Int = 0):
-            this(status = status, question = question) {
-        amountOfWrongAnswers = wrongAnswers
-    }
-
     fun validateAnswer(answer: String): String? = when (question) {
         Question.NAME -> Question.NAME.validateAnswer(answer)
         Question.PROFESSION -> Question.PROFESSION.validateAnswer(answer)
@@ -41,7 +36,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
                 return "Отлично - ты справился\n${question.question}" to status.color
             } else {
                 amountOfWrongAnswers++
-                if (amountOfWrongAnswers >= 3) {
+                if (amountOfWrongAnswers > 3) {
                     status = Status.NORMAL
                     question = Question.NAME
                     amountOfWrongAnswers = 0
@@ -55,7 +50,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         }
     }
 
-    enum class Status (val color: Triple<Int, Int, Int>) {
+    enum class Status(val color: Triple<Int, Int, Int>) {
         NORMAL(Triple(255, 255, 255)) ,
         WARNING(Triple(255, 120, 0)),
         DANGER(Triple(255, 60, 60)),
@@ -70,8 +65,8 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         }
     }
 
-    enum class Question (val question: String, val answers: List<String>) {
-        NAME ("Как меня зовут?", listOf("бендер", "bender")) {
+    enum class Question(val question: String, val answers: List<String>) {
+        NAME("Как меня зовут?", listOf("бендер", "bender"))  {
             override fun nextQuestion(): Question = PROFESSION
             override fun validateAnswer(answer: String): String? {
                 return if (!answer.contains(regex = Regex("^[A-ZА-Я]\\w+"))) {
@@ -81,7 +76,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
                 }
             }
         },
-        PROFESSION ("Назови мою профессию?", listOf("сгибальщик", "bender")) {
+        PROFESSION("Назови мою профессию?", listOf("сгибальщик", "bender")) {
             override fun nextQuestion(): Question = MATERIAL
             override fun validateAnswer(answer: String): String? {
                 return if (!answer.contains(regex = Regex("^[a-zа-я]\\w+"))) {
@@ -91,7 +86,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
                 }
             }
         },
-        MATERIAL ("Из чего я сделан?", listOf("металл", "дерево", "metal", "iron", "wood")) {
+        MATERIAL("Из чего я сделан?", listOf("металл", "дерево", "metal", "iron", "wood")) {
             override fun nextQuestion(): Question = BDAY
             override fun validateAnswer(answer: String): String? {
                 return if (answer.contains(regex = Regex("\\d+"))) {
@@ -101,7 +96,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
                 }
             }
         },
-        BDAY ("Когда меня создали?", listOf("2993")) {
+        BDAY("Когда меня создали?", listOf("2993")) {
             override fun nextQuestion(): Question = SERIAL
             override fun validateAnswer(answer: String): String? {
                 return if (answer.contains(regex = Regex("[a-zа-я]+", option = RegexOption.IGNORE_CASE))) {
@@ -111,7 +106,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
                 }
             }
         },
-        SERIAL ("Какой серийный номер?", listOf("2716057")) {
+        SERIAL("Мой серийный номер?", listOf("2716057")) {
             override fun nextQuestion(): Question = IDLE
             override fun validateAnswer(answer: String): String? {
                 return if (answer.length != 7
@@ -122,7 +117,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
                 }
             }
         },
-        IDLE ("На этом все, вопросов больше нет", listOf()) {
+        IDLE("На этом все, вопросов больше нет", listOf()) {
             override fun nextQuestion(): Question = IDLE
             override fun validateAnswer(answer: String): String? {
                 return null

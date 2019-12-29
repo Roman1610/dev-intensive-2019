@@ -41,12 +41,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TextView.OnEdito
 
         val status = savedInstanceState?.getString("STATUS") ?: Bender.Status.NORMAL.name
         val question = savedInstanceState?.getString("QUESTION") ?: Bender.Question.NAME.name
-        val wrongAnswers = savedInstanceState?.getInt("WRONG_ANSWERS") ?: 0
 
         benderObj = Bender(
             status = Bender.Status.valueOf(status),
-            question = Bender.Question.valueOf(question),
-            wrongAnswers = wrongAnswers)
+            question = Bender.Question.valueOf(question))
 
         val (r, g, b) = benderObj.status.color
         benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
@@ -91,7 +89,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TextView.OnEdito
 
         outState.putString("STATUS", benderObj.status.name)
         outState.putString("QUESTION", benderObj.question.name)
-        outState.putInt("WRONG_ANSWERS", benderObj.amountOfWrongAnswers)
     }
 
     override fun onClick(view: View?) {
