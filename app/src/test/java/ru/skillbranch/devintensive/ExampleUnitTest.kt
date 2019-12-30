@@ -174,6 +174,7 @@ class ExampleUnitTest {
 
     @Test
     fun testValidateRepository() {
+        assert(Utils.isValidRepository("")) //валиден
         assert(Utils.isValidRepository("https://github.com/johnDoe")) //валиден
         assert(Utils.isValidRepository("https://www.github.com/johnDoe")) //валиден
         assert(Utils.isValidRepository("www.github.com/johnDoe")) //валиден
@@ -188,5 +189,5 @@ class ExampleUnitTest {
         assert(!Utils.isValidRepository("https://github.com/pricing")) //невалиден
         assert(!Utils.isValidRepository("https://github.com/join")) //невалиден
     }
-    
+
 }

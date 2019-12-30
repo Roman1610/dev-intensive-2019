@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.Profile
 import ru.skillbranch.devintensive.repositories.PreferencesRepository
+import ru.skillbranch.devintensive.utils.Utils
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
 
 
@@ -81,6 +82,11 @@ class ProfileActivity : AppCompatActivity() {
 
         btn_edit.setOnClickListener {
             if (isEditMode) {
+                if (!Utils.isValidRepository(et_repository.text.toString())) {
+                    wr_repository.error = ""
+                    wr_repository.isErrorEnabled = false
+                    et_repository.setText("")
+                }
                 saveProfileInfo()
             }
             isEditMode = !isEditMode
@@ -101,7 +107,13 @@ class ProfileActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
+                if (!Utils.isValidRepository(p0.toString())) {
+                    wr_repository.isErrorEnabled = true
+                    wr_repository.error = "Невалидный адрес репозитория"
+                } else {
+                    wr_repository.error = ""
+                    wr_repository.isErrorEnabled = false
+                }
             }
 
         })

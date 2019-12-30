@@ -25,8 +25,4 @@ data class Profile(
         "respect" to respect
     )
 
-    fun printMe() {
-        println(nickName)
-    }
-
 }

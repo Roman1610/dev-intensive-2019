@@ -45,6 +45,10 @@ object Utils {
     }
 
     fun isValidRepository(rep: String): Boolean {
+        if (rep == "") {
+            return true
+        }
+
         val githubStr = "github.com"
 
         val exceptions = listOf(
