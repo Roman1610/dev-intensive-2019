@@ -41,7 +41,7 @@ class CircleImageView @JvmOverloads constructor(
 
     init {
         if (attrs != null) {
-            val typedArray = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView)
+            val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.CircleImageView, defStyleAttr, 0)
             borderColor = typedArray.getColor(R.styleable.CircleImageView_cv_borderColor, DEFAULT_BORDER_COLOR)
             borderWidth = typedArray.getDimension(R.styleable.CircleImageView_cv_borderWidth, DEFAULT_BORDER_WIDTH.toFloat()).toInt()
             typedArray.recycle()
@@ -108,8 +108,7 @@ class CircleImageView @JvmOverloads constructor(
     }
 
     fun setBorderColor(@ColorRes colorId: Int) {
-        // TODO
-        borderColor = resources.getColor(colorId)
+        borderColor = resources.getColor(colorId, context.theme)
         invalidate()
     }
 
