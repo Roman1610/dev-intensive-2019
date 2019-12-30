@@ -9,15 +9,11 @@ import android.util.AttributeSet
 import android.util.Log
 import android.util.TypedValue
 import android.widget.ImageView
-import androidx.annotation.ColorInt
-import androidx.annotation.Dimension
-import androidx.annotation.DrawableRes
-import androidx.annotation.Px
+import androidx.annotation.*
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.toRectF
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.extensions.dpToPx
-import kotlin.math.max
 
 
 class CircleImageView @JvmOverloads constructor(
@@ -45,9 +41,6 @@ class CircleImageView @JvmOverloads constructor(
     private val initialsPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val viewRect = Rect()
     private val borderRect = Rect()
-    private var size = 0
-
-    private var isAvatarMode = true
 
     init {
         if (attrs != null) {
@@ -74,8 +67,7 @@ class CircleImageView @JvmOverloads constructor(
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         Log.e("AvatarImageView", "onMeasure")
         val initSize = resolveDefaultSize(widthMeasureSpec)
-        val maxSize = max(initSize, size)
-        setMeasuredDimension(maxSize, maxSize)
+        setMeasuredDimension(initSize, initSize)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -96,7 +88,7 @@ class CircleImageView @JvmOverloads constructor(
         Log.e("AvatarImageView", "onDraw: ")
         // NOT allocate, ONLY draw
 
-        if (drawable != null && isAvatarMode) drawAvatar(canvas)
+        if (drawable != null) drawAvatar(canvas)
         else drawInitials(canvas)
 
         //resize rect
@@ -112,7 +104,6 @@ class CircleImageView @JvmOverloads constructor(
         Log.e("AvatarImageView", "onSaveInstanceState $id")
         val savedState = SavedState(super.onSaveInstanceState())
         with(savedState) {
-            ssIsAvatarMode = isAvatarMode
             ssBorderWidth = borderWidth
             ssBorderColor = borderColor
         }
@@ -124,7 +115,6 @@ class CircleImageView @JvmOverloads constructor(
         super.onRestoreInstanceState(state)
         if (state is SavedState) {
             state.also {
-                isAvatarMode = it.ssIsAvatarMode
                 borderWidth = it.ssBorderWidth
                 borderColor = it.ssBorderColor
             }
@@ -138,31 +128,37 @@ class CircleImageView @JvmOverloads constructor(
 
     override fun setImageBitmap(bm: Bitmap) {
         super.setImageBitmap(bm)
-        if (isAvatarMode) prepareShader(width, height)
+        prepareShader(width, height)
         Log.e("AvatarImageView", "setImageBitmap")
     }
 
     override fun setImageDrawable(drawable: Drawable?) {
         super.setImageDrawable(drawable)
-        if (isAvatarMode) prepareShader(width, height)
+        prepareShader(width, height)
         Log.e("AvatarImageView", "setImageDrawable")
     }
 
     override fun setImageResource(@DrawableRes resId: Int) {
         super.setImageResource(resId)
-        if (isAvatarMode) prepareShader(width, height)
+        prepareShader(width, height)
         Log.e("AvatarImageView", "setImageResource")
     }
 
     fun setInitials(initials: String?) {
         Log.e("AvatarImageView", "setInitials : $initials")
         this.initials = initials
-        if (initials != null) invalidate()
+        invalidate()
     }
 
-    fun setBorderColor(@ColorInt color: Int) {
-        Log.e("AvatarImageView", "setBorderColor : $color")
-        borderColor = color
+    fun setBorderColor(hex: String) {
+        borderColor = Color.parseColor(hex)
+        borderPaint.color = borderColor
+        invalidate()
+    }
+
+    fun setBorderColor(@ColorRes colorId: Int) {
+        Log.e("AvatarImageView", "setBorderColor : $colorId")
+        borderColor = colorId
         borderPaint.color = borderColor
         invalidate()
     }
@@ -172,6 +168,15 @@ class CircleImageView @JvmOverloads constructor(
         borderWidth = context.dpToPx(width)
         borderPaint.strokeWidth = borderWidth
         invalidate()
+    }
+
+    @Dimension
+    fun getBorderWidth(): Int {
+        return borderWidth.toInt()
+    }
+
+    fun getBorderColor(): Int {
+        return borderColor
     }
 
     private fun setup() {
