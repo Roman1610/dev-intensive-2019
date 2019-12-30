@@ -1,5 +1,6 @@
 package ru.skillbranch.devintensive.repositories
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import androidx.appcompat.app.AppCompatDelegate
@@ -7,6 +8,8 @@ import ru.skillbranch.devintensive.App
 import ru.skillbranch.devintensive.models.Profile
 
 object PreferencesRepository {
+
+    private const val PREFS_NAME = "DEV"
 
     private const val FIRST_NAME = "FIRST_NAME"
     private const val LAST_NAME = "LAST_NAME"
@@ -18,7 +21,7 @@ object PreferencesRepository {
 
     private val prefs: SharedPreferences by lazy {
         val ctx = App.applicationContext()
-        PreferenceManager.getDefaultSharedPreferences(ctx)
+        ctx.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
 
     fun saveAppTheme(theme: Int) {
