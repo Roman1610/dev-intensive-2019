@@ -78,6 +78,8 @@ class ProfileActivity : AppCompatActivity() {
         isEditMode = savedInstanceState?.getBoolean(IS_EDIT_MODE, false) ?: false
         showCurrentMode(isEditMode)
 
+
+
         btn_edit.setOnClickListener {
             if (isEditMode) {
                 if (!Utils.isValidRepository(et_repository.text.toString())) {
@@ -86,6 +88,7 @@ class ProfileActivity : AppCompatActivity() {
                     et_repository.setText("")
                 }
                 saveProfileInfo()
+                setInitialsAvatar()
             }
             isEditMode = !isEditMode
             showCurrentMode(isEditMode)
@@ -151,6 +154,14 @@ class ProfileActivity : AppCompatActivity() {
             setImageDrawable(icon)
         }
 
+    }
+
+    private fun setInitialsAvatar() {
+        val profile = viewModel.getProfileData().value as Profile
+        val firstName = profile.firstName
+        val lastName = profile.lastName
+
+        iv_avatar.setInitials(Utils.toInitials(firstName, lastName))
     }
 
     private fun saveProfileInfo() {
