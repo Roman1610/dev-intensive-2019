@@ -1,5 +1,7 @@
 package ru.skillbranch.devintensive.utils
 
+import ru.skillbranch.devintensive.extensions.containsOneOf
+
 object Utils {
 
     val rusLowerAlphabet = "а,б,в,г,д,е,ё,ж,з,и,й,к,л,м,н,о,п,р,с,т,у,ф,х,ц,ч,ш,щ,ъ,ы,ь,э,ю,я".split(",")
@@ -26,7 +28,7 @@ object Utils {
             localText = localText.split(rusUpperAlphabet[i]).joinToString(engUpperAlphabet[i])
         }
 
-        return localText.split(" ").joinToString(divider)
+        return localText.trim().split(" ").joinToString(divider)
     }
 
     fun toInitials(firstName: String?, lastName: String?): String? {
@@ -40,5 +42,58 @@ object Utils {
         } else if (last == null) {
             "${first[0].toUpperCase()}"
         } else "${first[0].toUpperCase()}${last[0].toUpperCase()}"
+    }
+
+    fun isValidRepository(rep: String): Boolean {
+        val githubStr = "github.com"
+
+        val exceptions = listOf(
+            "enterprise",
+            "features",
+            "topics",
+            "collections",
+            "trending",
+            "events",
+            "marketplace",
+            "pricing",
+            "nonprofit",
+            "customer-stories",
+            "security",
+            "login",
+            "join"
+        )
+
+        val prefixes = listOf(
+            "", "https://", "www.", "https://www."
+        )
+
+        if (rep.containsOneOf(exceptions)) {
+            return false
+        }
+
+        if (rep.contains(githubStr)) {
+            val githubStartIndex = rep.indexOf(githubStr)
+
+            if (!prefixes.contains(rep.substring(0, githubStartIndex))) {
+                return false
+            }
+
+            val githubEndIndex = githubStartIndex + githubStr.length
+
+            val nickWithSlash = rep.substring(startIndex = githubEndIndex)
+
+            if (nickWithSlash == "" || nickWithSlash == "/") {
+                return false
+            }
+
+            val nick = nickWithSlash.substringAfter("/")
+            if (nick.contains("/")) {
+                return false
+            }
+
+            return true
+        }
+
+        return false
     }
 }

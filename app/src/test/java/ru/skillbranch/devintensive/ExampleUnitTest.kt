@@ -4,10 +4,7 @@ import org.junit.Test
 
 import org.junit.Assert.*
 import ru.skillbranch.devintensive.extensions.*
-import ru.skillbranch.devintensive.models.BaseMessage
-import ru.skillbranch.devintensive.models.Bender
-import ru.skillbranch.devintensive.models.Chat
-import ru.skillbranch.devintensive.models.User
+import ru.skillbranch.devintensive.models.*
 import ru.skillbranch.devintensive.utils.Utils
 import java.util.*
 
@@ -174,4 +171,22 @@ class ExampleUnitTest {
         assert(bender.validateAnswer("1234567") == null)
         assert(bender.validateAnswer("2716057") == null)
     }
+
+    @Test
+    fun testValidateRepository() {
+        assert(Utils.isValidRepository("https://github.com/johnDoe")) //валиден
+        assert(Utils.isValidRepository("https://www.github.com/johnDoe")) //валиден
+        assert(Utils.isValidRepository("www.github.com/johnDoe")) //валиден
+        assert(Utils.isValidRepository("github.com/johnDoe")) //валиден
+
+        assert(!Utils.isValidRepository("https://anyDomain.github.com/johnDoe")) //невалиден
+        assert(!Utils.isValidRepository("https://github.com")) //невалиден
+        assert(!Utils.isValidRepository("https://github.com/")) //невалиден
+        assert(!Utils.isValidRepository("https://github.com/johnDoe/tree")) //невалиден
+        assert(!Utils.isValidRepository("https://github.com/johnDoe/tree/something")) //невалиден
+        assert(!Utils.isValidRepository("https://github.com/enterprise")) //невалиден
+        assert(!Utils.isValidRepository("https://github.com/pricing")) //невалиден
+        assert(!Utils.isValidRepository("https://github.com/join")) //невалиден
+    }
+    
 }
