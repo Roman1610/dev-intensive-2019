@@ -50,6 +50,18 @@ fun Date.format(pattern: String = "HH:mm:ss dd.MM.yy"): String {
     return SimpleDateFormat(pattern, Locale("ru")).format(this)
 }
 
+fun Date.shortFormat(): String {
+    val pattern = if (isSameDay(Date())) "HH:mm" else "dd.MM.yy"
+    val dataFormat = SimpleDateFormat(pattern, Locale("ru"))
+    return dataFormat.format(this)
+}
+
+fun Date.isSameDay(date: Date): Boolean {
+    val day1 = time / DAY
+    val day2 = date.time / DAY
+    return day1 == day2
+}
+
 fun Date.add(value: Int, units: TimeUnits): Date {
     var time = this.time
 

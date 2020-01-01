@@ -1,4 +1,4 @@
-package ru.skillbranch.devintensive.models
+package ru.skillbranch.devintensive.models.data
 
 import ru.skillbranch.devintensive.utils.Utils
 import java.util.*
@@ -29,7 +29,11 @@ data class User (
 
             val (firstName, lastName) = Utils.parseFullName(fullName)
 
-            return User("$lastId", firstName, lastName)
+            return User(
+                "$lastId",
+                firstName,
+                lastName
+            )
         }
     }
 
@@ -60,6 +64,7 @@ data class User (
         fun lastVisit(lastVisit: Date) = apply { this@Builder.lastVisit = lastVisit }
         fun isOnline(isOnline: Boolean) = apply { this@Builder.isOnline = isOnline }
 
-        fun build() = User(builder = this)
+        fun build() =
+            User(builder = this)
     }
 }

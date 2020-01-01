@@ -16,7 +16,7 @@ import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.extensions.dpToPx
 
 
-class CircleImageView @JvmOverloads constructor(
+class AvatarImageView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -27,6 +27,17 @@ class CircleImageView @JvmOverloads constructor(
         private const val DEFAULT_BORDER_COLOR = Color.WHITE
         private const val DEFAULT_BG_COLOR = Color.WHITE
         private const val DEFAULT_SIZE = 40
+
+        val bgColors = arrayOf(
+            Color.parseColor("#7BC862"),
+            Color.parseColor("#E17076"),
+            Color.parseColor("#FAA774"),
+            Color.parseColor("#6EC9CB"),
+            Color.parseColor("#65AADD"),
+            Color.parseColor("#A695E7"),
+            Color.parseColor("#EE7AAE"),
+            Color.parseColor("#2196F3")
+        )
     }
 
     @Px
@@ -34,7 +45,7 @@ class CircleImageView @JvmOverloads constructor(
     @ColorInt
     private var borderColor: Int = DEFAULT_BORDER_COLOR
     private var bgColor: Int = DEFAULT_BG_COLOR
-    private var initials: String? = null
+    private var initials: String = "??"
 
     private val borderPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val avatarPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -44,14 +55,14 @@ class CircleImageView @JvmOverloads constructor(
 
     init {
         if (attrs != null) {
-            val ta = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView)
+            val ta = context.obtainStyledAttributes(attrs, R.styleable.AvatarImageView)
             borderWidth = ta.getDimension(
-                R.styleable.CircleImageView_cv_borderWidth,
+                R.styleable.AvatarImageView_aiv_borderWidth,
                 context.dpToPx(DEFAULT_BORDER_WIDTH)
             )
 
             borderColor = ta.getColor(
-                R.styleable.CircleImageView_cv_borderColor,
+                R.styleable.AvatarImageView_aiv_borderColor,
                 DEFAULT_BORDER_COLOR
             )
 
@@ -146,7 +157,7 @@ class CircleImageView @JvmOverloads constructor(
 
     fun setInitials(initials: String?) {
         Log.e("AvatarImageView", "setInitials : $initials")
-        this.initials = initials
+        this.initials = initials ?: "??"
         invalidate()
     }
 
@@ -207,7 +218,7 @@ class CircleImageView @JvmOverloads constructor(
     }
 
     private fun drawInitials(canvas: Canvas) {
-        initialsPaint.color = bgColor
+        initialsPaint.color = initialsToColor(initials)
         canvas.drawOval(viewRect.toRectF(), initialsPaint)
 
         if (initials == null) {
@@ -233,6 +244,14 @@ class CircleImageView @JvmOverloads constructor(
         val value = TypedValue()
         context.theme.resolveAttribute(attrId, value, true)
         return value.data
+    }
+
+    private fun initialsToColor(letters: String): Int {
+        val byte = letters[0].toByte()
+        val len = bgColors.size
+        val deg = byte / len.toDouble()
+        val index = ((deg % 1) * len).toInt()
+        return bgColors[index]
     }
 
     private class SavedState : BaseSavedState, Parcelable {

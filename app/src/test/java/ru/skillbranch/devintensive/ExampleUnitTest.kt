@@ -5,6 +5,8 @@ import org.junit.Test
 import org.junit.Assert.*
 import ru.skillbranch.devintensive.extensions.*
 import ru.skillbranch.devintensive.models.*
+import ru.skillbranch.devintensive.models.data.Chat
+import ru.skillbranch.devintensive.models.data.User
 import ru.skillbranch.devintensive.utils.Utils
 import java.util.*
 
@@ -21,7 +23,8 @@ class ExampleUnitTest {
 
     @Test
     fun testInstance() {
-        val user = User("1", "John", "Wick")
+        val user =
+            User("1", "John", "Wick")
     }
 
     @Test
@@ -45,9 +48,11 @@ class ExampleUnitTest {
     fun testMessageAbstractFactory() {
         val user = User.makeUser("Роман Уваров")
 
-        val message = BaseMessage.makeMessage(user, Chat("0"),
+        val message = BaseMessage.makeMessage(user,
+            Chat("0"),
             payload = "any text message", type = "text") // Роман отправил сообщение "any text message" только что
-        val message1 = BaseMessage.makeMessage(user, Chat("0"),
+        val message1 = BaseMessage.makeMessage(user,
+            Chat("0"),
             Date().add(-2, TimeUnits.HOUR), payload = "https://anyurl.com",
             type = "image", isIncoming = true) // Роман получил изображение "https://anyurl.com" 2 часа назад
 
