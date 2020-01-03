@@ -4,8 +4,8 @@ import android.util.Log
 import ru.skillbranch.devintensive.extensions.TimeUnits
 import ru.skillbranch.devintensive.extensions.add
 import ru.skillbranch.devintensive.models.BaseMessage
-import ru.skillbranch.devintensive.models.data.Chat
 import ru.skillbranch.devintensive.models.TextMessage
+import ru.skillbranch.devintensive.models.data.Chat
 import ru.skillbranch.devintensive.models.data.User
 import java.util.*
 import kotlin.random.Random
@@ -391,7 +391,7 @@ object DataGenerator {
         return list
     }
 
-    fun generateChats(count: Int, hasGroups: Boolean = false): List<Chat> {
+    public fun generateChats(count: Int, hasGroups: Boolean = false): List<Chat> {
         val list = mutableListOf<Chat>()
         val users = generateUsers(count)
         for (user in users) {
@@ -419,7 +419,7 @@ object DataGenerator {
         return list
     }
 
-    fun generateChatsWithOffset(startId: Int, count: Int): List<Chat> {
+    public fun generateChatsWithOffset(startId: Int, count: Int): List<Chat> {
         val list = mutableListOf<Chat>()
         val users = generateUsers(count)
         for (user in users) {
@@ -446,6 +446,7 @@ object DataGenerator {
                     chat,
                     true,
                     user.lastVisit ?: Date(),
+                    false,
                     randomTextPayload()
                 )
             )
@@ -464,13 +465,13 @@ object DataGenerator {
     }
 
     private fun randomUser(users: List<User>): User {
-        val rndInd = (users.indices).random()
+        val rndInd = (0 until users.size).random()
         return users[rndInd]
     }
 
     private fun <T> List<T>.random(includeNull: Boolean = false): T? {
         return if (includeNull && Random.nextBoolean()) null
-        else this[(this.indices).random()]
+        else this[(0 until this.size).random()]
     }
 
     private fun <T> List<T>.randomSublist(maxCount: Int, minCount: Int = 1): List<T> {

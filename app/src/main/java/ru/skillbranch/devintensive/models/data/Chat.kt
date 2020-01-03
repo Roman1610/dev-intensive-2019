@@ -2,6 +2,8 @@ package ru.skillbranch.devintensive.models.data
 
 import ru.skillbranch.devintensive.extensions.shortFormat
 import ru.skillbranch.devintensive.models.BaseMessage
+import ru.skillbranch.devintensive.models.ImageMessage
+import ru.skillbranch.devintensive.models.TextMessage
 import ru.skillbranch.devintensive.utils.Utils
 import java.util.*
 
@@ -13,19 +15,40 @@ data class Chat(
     var isArchive: Boolean = false
 ) {
 
-    private fun unreadableMessageCount(): Int {
-        // TODO
-        return (0..20).random()
+    fun unreadableMessageCount(): Int {
+        var count = 0
+        for (message in messages) {
+            if (!message.isRead) {
+                count++
+            }
+        }
+        return count
     }
 
-    private fun lastMessageDate(): Date? {
-        // TODO
-        return Date()
+    fun lastMessageDate(): Date? {
+        if (messages.isEmpty()) {
+            return null
+        }
+        var lastDate = Date()
+        for (message in messages) {
+            if (lastDate.after(message.date)) {
+                lastDate = message.date
+            }
+        }
+        return lastDate
     }
 
-    private fun lastMessageShort(): Pair<String, String> {
-        // TODO
-        return "Сообщений нет" to "@John_Doe"
+    fun lastMessageShort(): Pair<String?, String?> {
+        if (messages.isEmpty()) {
+            return "Сообщений нет" to ""
+        }
+
+        val message = messages[0]
+        return if (message is TextMessage) {
+            message.text to message.from.firstName
+        } else {
+            "${message.from.firstName} - отправил фото" to message.from.firstName
+        }
     }
 
     private fun isSingle(): Boolean = members.size == 1

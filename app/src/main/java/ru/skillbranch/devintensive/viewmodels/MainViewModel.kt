@@ -28,7 +28,7 @@ class MainViewModel: ViewModel() {
     fun restoreFromArchive(chatId: String) {
         val chat = chatRepository.find(chatId)
         chat ?: return
-        chatRepository.update(chat.copy(isArchive = true))
+        chatRepository.update(chat.copy(isArchive = false))
     }
 
 }
