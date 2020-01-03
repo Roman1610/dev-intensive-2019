@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.item_chat_archive.*
 import kotlinx.android.synthetic.main.item_chat_group.*
+import kotlinx.android.synthetic.main.item_chat_group.tv_title_group
 import kotlinx.android.synthetic.main.item_chat_single.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.data.ChatItem
@@ -29,7 +31,8 @@ class ChatAdapter(var listener: (ChatItem) -> Unit): RecyclerView.Adapter<ChatAd
         return when(viewType) {
             SINGLE_TYPE -> SingleChatViewHolder(inflater.inflate(R.layout.item_chat_single, parent, false))
             GROUP_TYPE -> GroupChatViewHolder(inflater.inflate(R.layout.item_chat_group, parent, false))
-            else -> GroupChatViewHolder(inflater.inflate(R.layout.item_chat_group, parent, false))
+            ARCHIVE_TYPE -> ArchiveChatViewHolder(inflater.inflate(R.layout.item_chat_archive, parent, false))
+            else -> SingleChatViewHolder(inflater.inflate(R.layout.item_chat_single, parent, false))
         }
     }
 
@@ -63,7 +66,6 @@ class ChatAdapter(var listener: (ChatItem) -> Unit): RecyclerView.Adapter<ChatAd
 
     abstract inner class ChatItemViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView), LayoutContainer {
         abstract  fun bind(item: ChatItem, listener: (ChatItem) -> Unit)
-
     }
 
     inner class SingleChatViewHolder(containerView: View): ChatItemViewHolder(containerView), ItemTouchViewHolder {
@@ -75,43 +77,6 @@ class ChatAdapter(var listener: (ChatItem) -> Unit): RecyclerView.Adapter<ChatAd
                     .into(iv_avatar_single)
             } else {
                 Glide.with(itemView).clear(iv_avatar_single)
-                iv_avatar_single.setInitials(item.initials)
-            }
-
-            sv_indicator.visibility = if (item.isOnline) View.VISIBLE else View.GONE
-
-            with (tv_date_single) {
-                visibility = if (item.lastMessageDate != null) View.VISIBLE else View.GONE
-                text = item.lastMessageDate
-            }
-
-            with (tv_counter_single) {
-                visibility = if (item.messageCount > 0) View.VISIBLE else View.GONE
-                text = item.messageCount.toString()
-            }
-
-            tv_title_single.text = item.title
-            tv_message_single.text = item.shortDescription
-            itemView.setOnClickListener {
-                listener.invoke(item)
-            }
-        }
-
-        override fun onItemSelected() {
-            itemView.setBackgroundColor(Color.LTGRAY)
-        }
-
-        override fun onItemCleared() {
-            itemView.setBackgroundColor(Color.WHITE)
-        }
-    }
-
-    inner class ArchiveChatViewHolder(containerView: View): ChatItemViewHolder(containerView), ItemTouchViewHolder {
-
-        override fun bind(item: ChatItem, listener: (ChatItem) -> Unit) {
-            if (item.avatar != null) {
-                // TODO loading avatar from web
-            } else {
                 iv_avatar_single.setInitials(item.initials)
             }
 
@@ -178,6 +143,28 @@ class ChatAdapter(var listener: (ChatItem) -> Unit): RecyclerView.Adapter<ChatAd
         override fun onItemCleared() {
             itemView.setBackgroundColor(Color.WHITE)
         }
+    }
+
+    inner class ArchiveChatViewHolder(containerView: View): ChatItemViewHolder(containerView) {
+
+        override fun bind(item: ChatItem, listener: (ChatItem) -> Unit) {
+            with (tv_date_archive) {
+                visibility = if (item.lastMessageDate != null) View.VISIBLE else View.GONE
+                text = item.lastMessageDate
+            }
+
+            with (tv_counter_single) {
+                visibility = if (item.messageCount > 0) View.VISIBLE else View.GONE
+                text = item.messageCount.toString()
+            }
+
+            tv_title_single.text = item.title
+            tv_message_single.text = item.shortDescription
+            itemView.setOnClickListener {
+                listener.invoke(item)
+            }
+        }
+
     }
 
 }

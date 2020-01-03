@@ -342,6 +342,46 @@ class Hometask5 {
             finalItemCount
         )
     }
+
+    /**
+     * Проверяется поиск по чатам в MainActivity
+     */
+    @Test
+    fun module7() {
+        var adapter: ChatAdapter? = null
+        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
+
+        activityScenario.onActivity {
+            adapter = it.findViewById<RecyclerView>(R.id.rv_chat_list)?.adapter as ChatAdapter
+        }
+
+        if (adapter == null) {
+            Assert.fail("UserAdapter must be not null")
+        }
+
+        val filteredLetter = adapter!!.items.first().title.substring(0..1)
+        val filteredItems = adapter!!.items.filter { it.title.contains(filteredLetter, true) }
+
+        onView(withId(R.id.action_search))
+            .perform(click())
+
+        onView(isAssignableFrom(EditText::class.java))
+            .perform(replaceText(filteredLetter), pressImeActionButton(), pressBack())
+
+        onView(isAssignableFrom(EditText::class.java))
+            .perform(clearText(), pressImeActionButton(), pressBack())
+
+        filteredItems.forEach { chat ->
+            val position = adapter!!.items.indexOfFirst { item -> item.id == chat.id }
+
+            onView(withId(R.id.rv_chat_list))
+                .perform(
+                    RecyclerViewActions.scrollToPosition<ChatAdapter.ChatItemViewHolder>(position)
+                )
+
+            sleep(1000)
+        }
+    }
 }
 
 class ClickCloseIconAction : ViewAction {

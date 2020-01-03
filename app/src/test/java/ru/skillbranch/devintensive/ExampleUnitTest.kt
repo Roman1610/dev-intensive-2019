@@ -49,10 +49,10 @@ class ExampleUnitTest {
         val user = User.makeUser("Роман Уваров")
 
         val message = BaseMessage.makeMessage(user,
-            Chat("0"),
+            Chat("0", "Title"),
             payload = "any text message", type = "text") // Роман отправил сообщение "any text message" только что
         val message1 = BaseMessage.makeMessage(user,
-            Chat("0"),
+            Chat("0", "Title"),
             Date().add(-2, TimeUnits.HOUR), payload = "https://anyurl.com",
             type = "image", isIncoming = true) // Роман получил изображение "https://anyurl.com" 2 часа назад
 
